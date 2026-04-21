@@ -1,0 +1,7 @@
+project_id = "dfquqtbykpuozpbeznpq"
+
+[functions.trip-brief]
+verify_jwt = false
+
+[functions.safewander-chat]
+verify_jwt = false
