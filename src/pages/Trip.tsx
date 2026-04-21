@@ -225,6 +225,16 @@ const Trip = () => {
           </Section>
         </div>
       </main>
+
+      <WhisperSOS
+        destination={trip.destination}
+        country={trip.country}
+        emergency={emergency}
+        pois={pois}
+        brief={brief}
+        lat={trip.lat}
+        lon={trip.lon}
+      />
     </div>
   );
 };
