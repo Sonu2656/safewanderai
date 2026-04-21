@@ -103,14 +103,20 @@
 }
 
 @layer utilities {
-  .bg-gradient-hero { background: var(--gradient-hero); }
-  .bg-gradient-coral { background: var(--gradient-coral); }
-  .bg-gradient-teal { background: var(--gradient-teal); }
-  .bg-gradient-sun { background: var(--gradient-sun); }
+  .bg-gradient-hero { background-image: var(--gradient-hero); }
+  .bg-gradient-coral { background-image: var(--gradient-coral); }
+  .bg-gradient-teal { background-image: var(--gradient-teal); }
+  .bg-gradient-sun { background-image: var(--gradient-sun); }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .text-balance { text-wrap: balance; }
+
+  /* Ensure gradient text renders on Safari/Chromium when combined with bg-clip-text */
+  .bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
 }
 
 @keyframes float {
