@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getEmergencyNumbers } from "@/lib/emergency-numbers";
 import { getNearbyPois, type Poi } from "@/lib/travel-data";
 import { TripChat } from "@/components/TripChat";
+import { WhisperSOS } from "@/components/WhisperSOS";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
@@ -224,6 +225,16 @@ const Trip = () => {
           </Section>
         </div>
       </main>
+
+      <WhisperSOS
+        destination={trip.destination}
+        country={trip.country}
+        emergency={emergency}
+        pois={pois}
+        brief={brief}
+        lat={trip.lat}
+        lon={trip.lon}
+      />
     </div>
   );
 };
