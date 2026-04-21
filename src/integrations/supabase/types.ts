@@ -14,7 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trips: {
+        Row: {
+          arrival_window: string | null
+          brief: Json
+          country: string | null
+          created_at: string
+          destination: string
+          id: string
+          lat: number | null
+          lon: number | null
+          priority: string | null
+          traveller_profile: string | null
+          trip_length: number | null
+          user_id: string
+          weather: Json | null
+        }
+        Insert: {
+          arrival_window?: string | null
+          brief: Json
+          country?: string | null
+          created_at?: string
+          destination: string
+          id?: string
+          lat?: number | null
+          lon?: number | null
+          priority?: string | null
+          traveller_profile?: string | null
+          trip_length?: number | null
+          user_id: string
+          weather?: Json | null
+        }
+        Update: {
+          arrival_window?: string | null
+          brief?: Json
+          country?: string | null
+          created_at?: string
+          destination?: string
+          id?: string
+          lat?: number | null
+          lon?: number | null
+          priority?: string | null
+          traveller_profile?: string | null
+          trip_length?: number | null
+          user_id?: string
+          weather?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
