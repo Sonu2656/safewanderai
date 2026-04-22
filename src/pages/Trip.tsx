@@ -10,6 +10,7 @@ import { getNearbyPois, type Poi } from "@/lib/travel-data";
 import { TripChat } from "@/components/TripChat";
 import { WhisperSOS } from "@/components/WhisperSOS";
 import { SafetyCard } from "@/components/SafetyCard";
+import { SafetyPulse } from "@/components/SafetyPulse";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
@@ -45,6 +46,7 @@ const Trip = () => {
   const [loading, setLoading] = useState(true);
   const [pois, setPois] = useState<Poi[]>([]);
   const [poisLoading, setPoisLoading] = useState(true);
+  const [sosSignal, setSosSignal] = useState(0);
 
   useEffect(() => {
     if (!user || !id) return;
@@ -123,6 +125,20 @@ const Trip = () => {
             value={trip.weather ? `${trip.weather.temp}° ${trip.weather.condition}` : "—"}
             sub={trip.weather ? `Feels ${trip.weather.apparent}° · ${trip.weather.windKph} km/h` : undefined} />
           <QuickCard icon={MapPin} tone="bg-primary-soft text-primary" label="Country" value={trip.country || "—"} sub="ISO code" />
+        </div>
+
+        {/* Safety Pulse — live, sensor-aware companion */}
+        <div className="mt-6">
+          <SafetyPulse
+            destination={trip.destination}
+            country={trip.country}
+            baseScore={score}
+            weather={trip.weather}
+            emergency={emergency}
+            lat={trip.lat}
+            lon={trip.lon}
+            onPanic={() => setSosSignal((n) => n + 1)}
+          />
         </div>
 
         {/* Main grid */}
@@ -243,6 +259,7 @@ const Trip = () => {
         brief={brief}
         lat={trip.lat}
         lon={trip.lon}
+        openSignal={sosSignal}
       />
     </div>
   );
