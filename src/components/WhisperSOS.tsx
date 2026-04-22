@@ -19,10 +19,12 @@ type Props = {
  * One-tap: call nearest hospital/police, copy emergency SMS with live GPS,
  * and speak the local-language "I need help" phrase out loud.
  */
-export const WhisperSOS = ({ destination, country, emergency, pois, brief, lat, lon }: Props) => {
+export const WhisperSOS = ({ destination, country, emergency, pois, brief, lat, lon, openSignal }: Props) => {
   const [open, setOpen] = useState(false);
   const [liveLat, setLiveLat] = useState<number | null>(null);
   const [liveLon, setLiveLon] = useState<number | null>(null);
+
+  useEffect(() => { if (openSignal && openSignal > 0) setOpen(true); }, [openSignal]);
 
   useEffect(() => {
     if (!open || !navigator.geolocation) return;
