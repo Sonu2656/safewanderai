@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
-import { LogOut, Sparkles } from "lucide-react";
+import { LogOut, Sparkles, UserCircle2 } from "lucide-react";
 
 export const Navbar = () => {
   const [user, setUser] = useState<any>(null);
@@ -32,6 +32,11 @@ export const Navbar = () => {
               <Link to="/dashboard">
                 <Button variant="ghost" size="sm" className="gap-1.5">
                   <Sparkles className="h-4 w-4" /> Dashboard
+                </Button>
+              </Link>
+              <Link to="/profile">
+                <Button variant="ghost" size="sm" className="gap-1.5">
+                  <UserCircle2 className="h-4 w-4" /> Profile
                 </Button>
               </Link>
               <Button onClick={handleSignOut} variant="outline" size="sm" className="gap-1.5">

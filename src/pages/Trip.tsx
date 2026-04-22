@@ -9,6 +9,7 @@ import { getEmergencyNumbers } from "@/lib/emergency-numbers";
 import { getNearbyPois, type Poi } from "@/lib/travel-data";
 import { TripChat } from "@/components/TripChat";
 import { WhisperSOS } from "@/components/WhisperSOS";
+import { SafetyCard } from "@/components/SafetyCard";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
@@ -148,6 +149,14 @@ const Trip = () => {
               <EmergencyRow label="Police" value={emergency.police} />
               <EmergencyRow label="Ambulance" value={emergency.ambulance} />
               <EmergencyRow label="Fire" value={emergency.fire} />
+            </div>
+            <div className="mt-4">
+              <SafetyCard
+                destination={trip.destination}
+                country={trip.country}
+                emergency={emergency}
+                brief={brief}
+              />
             </div>
           </Section>
 
