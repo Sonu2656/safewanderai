@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { geocode, getWeather } from "@/lib/travel-data";
-import { Sparkles, Loader2, MapPin, Plus, Trash2, ArrowRight, Compass } from "lucide-react";
+import { popConfetti } from "@/lib/fun";
+import { Sparkles, Loader2, MapPin, Plus, Trash2, ArrowRight, Compass, PartyPopper } from "lucide-react";
 
 type Trip = {
   id: string;
