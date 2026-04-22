@@ -127,6 +127,20 @@ const Trip = () => {
           <QuickCard icon={MapPin} tone="bg-primary-soft text-primary" label="Country" value={trip.country || "—"} sub="ISO code" />
         </div>
 
+        {/* Safety Pulse — live, sensor-aware companion */}
+        <div className="mt-6">
+          <SafetyPulse
+            destination={trip.destination}
+            country={trip.country}
+            baseScore={score}
+            weather={trip.weather}
+            emergency={emergency}
+            lat={trip.lat}
+            lon={trip.lon}
+            onPanic={() => setSosSignal((n) => n + 1)}
+          />
+        </div>
+
         {/* Main grid */}
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           {/* Risks */}
