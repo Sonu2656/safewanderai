@@ -83,10 +83,10 @@ const Auth = () => {
           <div className="mb-8 text-center">
             <div className="mb-6 flex justify-center"><Logo /></div>
             <h1 className="font-display text-4xl font-bold">
-              {isSignup ? "Start exploring safely" : "Welcome back"}
+              {isSignup ? "Pack your bags ✈️" : "Welcome back, wanderer"}
             </h1>
             <p className="mt-2 text-muted-foreground">
-              {isSignup ? "Create your free SafeWander account." : "Sign in to your trip dashboard."}
+              {isSignup ? "Create your free SafeWander account — takes 10 seconds." : "Your trips are waiting."}
             </p>
           </div>
 

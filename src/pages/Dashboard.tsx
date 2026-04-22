@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { geocode, getWeather } from "@/lib/travel-data";
-import { Sparkles, Loader2, MapPin, Plus, Trash2, ArrowRight, Compass } from "lucide-react";
+import { popConfetti } from "@/lib/fun";
+import { Sparkles, Loader2, MapPin, Plus, Trash2, ArrowRight, Compass, PartyPopper } from "lucide-react";
 
 type Trip = {
   id: string;
@@ -100,7 +101,8 @@ const Dashboard = () => {
         .single();
       if (insertErr) throw insertErr;
 
-      toast.success("Brief ready!", { id: "gen" });
+      toast.success("Brief ready! Have fun out there 🎉", { id: "gen" });
+      popConfetti({ y: 0.3 });
       navigate(`/trip/${inserted.id}`);
     } catch (err: any) {
       console.error(err);
@@ -125,9 +127,9 @@ const Dashboard = () => {
       <main className="container py-10">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Your dashboard</p>
-            <h1 className="mt-1 font-display text-4xl font-bold md:text-5xl">Plan a safer trip</h1>
-            <p className="mt-2 text-muted-foreground">Generate a fresh brief or revisit your past destinations.</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Mission control 🚀</p>
+            <h1 className="mt-1 font-display text-4xl font-bold md:text-5xl">Where to next?</h1>
+            <p className="mt-2 text-muted-foreground">Cook up a fresh brief, or revisit a past adventure.</p>
           </div>
         </div>
 
@@ -184,9 +186,9 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <Button type="submit" disabled={generating} size="lg" className="w-full bg-gradient-coral border-0 shadow-soft hover:shadow-glow">
-                  {generating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating brief...</>
-                    : <><Sparkles className="mr-2 h-4 w-4" /> Generate live brief</>}
+                <Button type="submit" disabled={generating} size="lg" className="w-full bg-gradient-coral border-0 shadow-soft hover:shadow-glow hover:scale-[1.01] transition-all">
+                  {generating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Cooking up your brief...</>
+                    : <><PartyPopper className="mr-2 h-4 w-4" /> Generate my brief</>}
                 </Button>
               </div>
             </form>
@@ -203,9 +205,11 @@ const Dashboard = () => {
                 <div className="flex justify-center py-8"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
               ) : trips.length === 0 ? (
                 <div className="rounded-xl border-2 border-dashed border-border/70 p-8 text-center">
-                  <Compass className="mx-auto h-8 w-8 text-muted-foreground" />
-                  <p className="mt-3 text-sm font-semibold">No trips yet</p>
-                  <p className="mt-1 text-xs text-muted-foreground">Generate your first brief to see it here.</p>
+                  <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-gradient-sun shadow-soft animate-float">
+                    <Compass className="h-6 w-6 text-accent-foreground" />
+                  </div>
+                  <p className="mt-3 text-sm font-semibold">No adventures yet ✈️</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Your first brief is one tap away.</p>
                 </div>
               ) : (
                 <ul className="space-y-2">
