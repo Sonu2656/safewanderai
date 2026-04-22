@@ -11,6 +11,7 @@ type Props = {
   brief: any;
   lat: number | null;
   lon: number | null;
+  openSignal?: number;
 };
 
 /**
