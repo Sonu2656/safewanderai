@@ -259,6 +259,7 @@ const Trip = () => {
         brief={brief}
         lat={trip.lat}
         lon={trip.lon}
+        openSignal={sosSignal}
       />
     </div>
   );
