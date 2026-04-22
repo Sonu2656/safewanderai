@@ -10,6 +10,7 @@ import { getNearbyPois, type Poi } from "@/lib/travel-data";
 import { TripChat } from "@/components/TripChat";
 import { WhisperSOS } from "@/components/WhisperSOS";
 import { SafetyCard } from "@/components/SafetyCard";
+import { SafetyPulse } from "@/components/SafetyPulse";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
