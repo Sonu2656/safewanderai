@@ -46,6 +46,7 @@ const Trip = () => {
   const [loading, setLoading] = useState(true);
   const [pois, setPois] = useState<Poi[]>([]);
   const [poisLoading, setPoisLoading] = useState(true);
+  const [sosSignal, setSosSignal] = useState(0);
 
   useEffect(() => {
     if (!user || !id) return;
