@@ -241,8 +241,26 @@ const Trip = () => {
             <BulletList items={brief.cultural_etiquette} />
           </Section>
 
+          {/* Travel Essentials — plug, water, drive side, sun, time */}
+          <Section icon={Compass} title="Travel essentials" subtitle="Plug · water · drive side · local time" className="lg:col-span-3">
+            <TravelEssentials country={trip.country} lat={trip.lat} lon={trip.lon} />
+          </Section>
+
+          {/* Currency converter */}
+          <Section icon={Coins} title="Currency converter" subtitle="Live ECB rates · no app switching">
+            <CurrencyConverter
+              destinationCurrency={essentials?.currency || "EUR"}
+              symbol={essentials?.currencySymbol || "€"}
+            />
+          </Section>
+
+          {/* Phrasebook — 12 essentials with text-to-speech */}
+          <Section icon={Languages} title="Phrasebook" subtitle="Tap to hear it spoken" className="lg:col-span-2">
+            <Phrasebook language={essentials?.language} languageLabel={essentials?.languageLabel} />
+          </Section>
+
           {/* Phrases */}
-          <Section icon={Languages} title="Emergency phrases" subtitle="Help in the local language" className="lg:col-span-2">
+          <Section icon={Languages} title="Emergency phrases" subtitle="Help in the local language" className="lg:col-span-3">
             <div className="grid gap-3 sm:grid-cols-2">
               {(brief.emergency_phrases || []).map((p: any, i: number) => (
                 <div key={i} className="rounded-xl border bg-background p-4">
