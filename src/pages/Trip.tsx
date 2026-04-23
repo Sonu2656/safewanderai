@@ -11,10 +11,14 @@ import { TripChat } from "@/components/TripChat";
 import { WhisperSOS } from "@/components/WhisperSOS";
 import { SafetyCard } from "@/components/SafetyCard";
 import { SafetyPulse } from "@/components/SafetyPulse";
+import { CurrencyConverter } from "@/components/CurrencyConverter";
+import { Phrasebook } from "@/components/Phrasebook";
+import { TravelEssentials } from "@/components/TravelEssentials";
+import { getEssentials } from "@/lib/country-essentials";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
-  ExternalLink, Sparkles,
+  ExternalLink, Sparkles, Compass,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -72,6 +76,7 @@ const Trip = () => {
   const score = brief.safety_score ?? 0;
   const tone = scoreTone(score);
   const emergency = getEmergencyNumbers(trip.country || undefined);
+  const essentials = getEssentials(trip.country);
 
   const mapBbox = trip.lat && trip.lon
     ? `${trip.lon - 0.04},${trip.lat - 0.025},${trip.lon + 0.04},${trip.lat + 0.025}`
@@ -236,8 +241,26 @@ const Trip = () => {
             <BulletList items={brief.cultural_etiquette} />
           </Section>
 
+          {/* Travel Essentials — plug, water, drive side, sun, time */}
+          <Section icon={Compass} title="Travel essentials" subtitle="Plug · water · drive side · local time" className="lg:col-span-3">
+            <TravelEssentials country={trip.country} lat={trip.lat} lon={trip.lon} />
+          </Section>
+
+          {/* Currency converter */}
+          <Section icon={Coins} title="Currency converter" subtitle="Live ECB rates · no app switching">
+            <CurrencyConverter
+              destinationCurrency={essentials?.currency || "EUR"}
+              symbol={essentials?.currencySymbol || "€"}
+            />
+          </Section>
+
+          {/* Phrasebook — 12 essentials with text-to-speech */}
+          <Section icon={Languages} title="Phrasebook" subtitle="Tap to hear it spoken" className="lg:col-span-2">
+            <Phrasebook language={essentials?.language} languageLabel={essentials?.languageLabel} />
+          </Section>
+
           {/* Phrases */}
-          <Section icon={Languages} title="Emergency phrases" subtitle="Help in the local language" className="lg:col-span-2">
+          <Section icon={Languages} title="Emergency phrases" subtitle="Help in the local language" className="lg:col-span-3">
             <div className="grid gap-3 sm:grid-cols-2">
               {(brief.emergency_phrases || []).map((p: any, i: number) => (
                 <div key={i} className="rounded-xl border bg-background p-4">

@@ -7,13 +7,16 @@ import { burstFromEvent } from "@/lib/fun";
 import heroImg from "@/assets/hero-globe.jpg";
 import {
   ShieldCheck, MapPin, Phone, CloudSun, MessageCircle, Sparkles, Globe2, Users, ArrowRight,
-  PartyPopper, Heart, Coffee, Zap,
+  PartyPopper, Heart, Coffee, Zap, Coins, Languages, Compass,
 } from "lucide-react";
 
 const features = [
   { icon: ShieldCheck, color: "bg-primary-soft text-primary", emoji: "🛡️", title: "AI Safety Score", desc: "Your destination, rated 0–100 with the why behind it. No mystery, no panic." },
   { icon: Phone, color: "bg-secondary-soft text-secondary", emoji: "📞", title: "Emergency, decoded", desc: "Police, ambulance, fire — for 60+ countries. Tap to dial. Works when you need it most." },
   { icon: MapPin, color: "bg-accent-soft text-accent-foreground", emoji: "📍", title: "Help, nearby", desc: "Hospitals, pharmacies, embassies plotted around you — even in places you can't pronounce." },
+  { icon: Coins, color: "bg-primary-soft text-primary", emoji: "💱", title: "Live currency + tipping", desc: "Real ECB rates, tipping etiquette, and budget cues — never get fleeced again." },
+  { icon: Languages, color: "bg-secondary-soft text-secondary", emoji: "🗣️", title: "Talk-to-them phrasebook", desc: "12 essentials in 20+ languages. Tap to hear them spoken out loud, instantly." },
+  { icon: Compass, color: "bg-accent-soft text-accent-foreground", emoji: "🔌", title: "Plug, water, drive side", desc: "Local time, sunset, voltage, tap-water safety — the boring questions, answered." },
   { icon: CloudSun, color: "bg-primary-soft text-primary", emoji: "🌤️", title: "Weather + packing", desc: "Live conditions feed a packing list that adapts to your trip — no more 'I forgot socks again'." },
   { icon: MessageCircle, color: "bg-secondary-soft text-secondary", emoji: "💬", title: "Ask anything", desc: "Scams? Transport? Solo-travel tips? Your AI companion answers — with your trip in mind." },
   { icon: Zap, color: "bg-accent-soft text-accent-foreground", emoji: "⚡", title: "Safety Pulse (live)", desc: "Shake to alert, low-battery nudges, time-aware scoring. It's like a sixth sense for travel." },
@@ -105,10 +108,10 @@ const Index = () => {
       {/* Features */}
       <section className="container py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Everything you need</span>
-          <h2 className="mt-2 font-display text-4xl font-bold md:text-5xl">One brief. Every answer. Zero stress.</h2>
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Your travel toolkit</span>
+          <h2 className="mt-2 font-display text-4xl font-bold md:text-5xl">9 apps in one. Zero faff.</h2>
           <p className="mt-4 text-muted-foreground">
-            Stop juggling six tabs and a sketchy travel forum from 2014. We pull live data + AI smarts into one friendly brief.
+            Currency converter, phrasebook, plug guide, safety score, SOS, packing list, weather, AI chat, nearby help — one tap, one brief.
           </p>
         </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
