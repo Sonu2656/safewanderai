@@ -108,10 +108,10 @@ const Index = () => {
       {/* Features */}
       <section className="container py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Everything you need</span>
-          <h2 className="mt-2 font-display text-4xl font-bold md:text-5xl">One brief. Every answer. Zero stress.</h2>
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Your travel toolkit</span>
+          <h2 className="mt-2 font-display text-4xl font-bold md:text-5xl">9 apps in one. Zero faff.</h2>
           <p className="mt-4 text-muted-foreground">
-            Stop juggling six tabs and a sketchy travel forum from 2014. We pull live data + AI smarts into one friendly brief.
+            Currency converter, phrasebook, plug guide, safety score, SOS, packing list, weather, AI chat, nearby help — one tap, one brief.
           </p>
         </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
