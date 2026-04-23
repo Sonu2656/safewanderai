@@ -17,10 +17,11 @@ import { TravelEssentials } from "@/components/TravelEssentials";
 import { TripVibe } from "@/components/TripVibe";
 import { WanderBingo } from "@/components/WanderBingo";
 import { getEssentials } from "@/lib/country-essentials";
+import { TripTape } from "@/components/TripTape";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
-  ExternalLink, Sparkles, Compass, Trophy,
+  ExternalLink, Sparkles, Compass, Trophy, Camera,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -96,19 +97,26 @@ const Trip = () => {
         </Link>
 
         {/* Header */}
-        <header className="mt-4 grid gap-6 rounded-3xl bg-gradient-hero p-6 shadow-card md:grid-cols-[1fr_auto] md:p-8">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">Trip brief</p>
-            <h1 className="mt-1 font-display text-3xl font-bold md:text-5xl">{trip.destination}</h1>
+        <header className="relative mt-4 grid gap-6 overflow-hidden rounded-3xl bg-gradient-hero bg-mesh p-6 shadow-card md:grid-cols-[1fr_auto] md:p-8">
+          <span className="pointer-events-none absolute right-6 top-4 hidden text-3xl animate-bounce-soft md:block" aria-hidden>✨</span>
+          <span className="pointer-events-none absolute left-6 bottom-4 hidden text-2xl animate-float md:block" style={{ animationDelay: "1s" }} aria-hidden>🌍</span>
+          <div className="relative">
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary shadow-soft backdrop-blur sticker">
+              <Sparkles className="h-3 w-3" /> Trip brief
+            </p>
+            <h1 className="mt-3 font-display text-3xl font-black md:text-5xl">
+              <span className="font-handwritten text-2xl font-bold text-muted-foreground md:text-3xl">you're going to</span><br />
+              <span className="bg-gradient-coral bg-clip-text text-transparent">{trip.destination}</span>
+            </h1>
             <p className="mt-3 max-w-2xl text-muted-foreground text-balance">{brief.summary}</p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs">
-              {trip.traveller_profile && <span className="rounded-full bg-card/80 px-3 py-1 font-medium backdrop-blur">{trip.traveller_profile}</span>}
-              {trip.trip_length && <span className="rounded-full bg-card/80 px-3 py-1 font-medium backdrop-blur">{trip.trip_length} days</span>}
-              {trip.arrival_window && <span className="rounded-full bg-card/80 px-3 py-1 font-medium backdrop-blur">{trip.arrival_window}</span>}
-              {trip.priority && <span className="rounded-full bg-card/80 px-3 py-1 font-medium backdrop-blur">{trip.priority}</span>}
+              {trip.traveller_profile && <span className="rounded-full bg-card px-3 py-1 font-bold sticker">{trip.traveller_profile}</span>}
+              {trip.trip_length && <span className="rounded-full bg-card px-3 py-1 font-bold sticker">{trip.trip_length} days</span>}
+              {trip.arrival_window && <span className="rounded-full bg-card px-3 py-1 font-bold sticker">{trip.arrival_window}</span>}
+              {trip.priority && <span className="rounded-full bg-card px-3 py-1 font-bold sticker">{trip.priority}</span>}
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-card/90 p-6 shadow-soft backdrop-blur md:min-w-[180px]">
+          <div className="relative flex flex-col items-center justify-center rounded-2xl bg-card/95 p-6 shadow-soft backdrop-blur md:min-w-[180px]">
             <div className={`relative grid h-28 w-28 place-items-center rounded-full ${tone.soft}`}>
               <svg className="absolute inset-0" viewBox="0 0 120 120">
                 <circle cx="60" cy="60" r="52" stroke="currentColor" className="text-border" strokeWidth="8" fill="none" />
@@ -138,6 +146,7 @@ const Trip = () => {
         <Tabs defaultValue="vibe" className="mt-8">
           <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-card p-1.5 shadow-soft">
             <TabTrig value="vibe" icon={Sparkles}>Vibe</TabTrig>
+            <TabTrig value="tape" icon={Camera}>Tape</TabTrig>
             <TabTrig value="safety" icon={ShieldAlert}>Safety</TabTrig>
             <TabTrig value="explore" icon={MapPin}>Explore</TabTrig>
             <TabTrig value="essentials" icon={Compass}>Essentials</TabTrig>
@@ -156,6 +165,24 @@ const Trip = () => {
                 <BulletList items={brief.cultural_etiquette} />
               </Section>
             </div>
+          </TabsContent>
+
+          {/* TAPE — shareable poster */}
+          <TabsContent value="tape" className="mt-6">
+            <Section icon={Camera} title="Trip Tape" subtitle="Your trip, as a story-ready mini-poster — save & share">
+              <TripTape
+                destination={trip.destination}
+                country={trip.country}
+                score={score}
+                scoreLabel={brief.score_label || tone.label}
+                weather={trip.weather}
+                vibeWord={brief.vibe_word || "Main character energy"}
+                emergency={emergency}
+                packingTop={brief.packing_checklist?.slice(0, 1)}
+                phraseLocal={brief.emergency_phrases?.[0]?.local}
+                phraseEn={brief.emergency_phrases?.[0]?.phrase}
+              />
+            </Section>
           </TabsContent>
 
           {/* SAFETY — pulse, risks, emergency */}
