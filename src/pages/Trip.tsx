@@ -11,10 +11,14 @@ import { TripChat } from "@/components/TripChat";
 import { WhisperSOS } from "@/components/WhisperSOS";
 import { SafetyCard } from "@/components/SafetyCard";
 import { SafetyPulse } from "@/components/SafetyPulse";
+import { CurrencyConverter } from "@/components/CurrencyConverter";
+import { Phrasebook } from "@/components/Phrasebook";
+import { TravelEssentials } from "@/components/TravelEssentials";
+import { getEssentials } from "@/lib/country-essentials";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
-  ExternalLink, Sparkles,
+  ExternalLink, Sparkles, Compass,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -72,6 +76,7 @@ const Trip = () => {
   const score = brief.safety_score ?? 0;
   const tone = scoreTone(score);
   const emergency = getEmergencyNumbers(trip.country || undefined);
+  const essentials = getEssentials(trip.country);
 
   const mapBbox = trip.lat && trip.lon
     ? `${trip.lon - 0.04},${trip.lat - 0.025},${trip.lon + 0.04},${trip.lat + 0.025}`
