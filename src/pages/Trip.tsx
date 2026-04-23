@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getEmergencyNumbers } from "@/lib/emergency-numbers";
 import { getNearbyPois, type Poi } from "@/lib/travel-data";
 import { TripChat } from "@/components/TripChat";
@@ -14,11 +14,13 @@ import { SafetyPulse } from "@/components/SafetyPulse";
 import { CurrencyConverter } from "@/components/CurrencyConverter";
 import { Phrasebook } from "@/components/Phrasebook";
 import { TravelEssentials } from "@/components/TravelEssentials";
+import { TripVibe } from "@/components/TripVibe";
+import { WanderBingo } from "@/components/WanderBingo";
 import { getEssentials } from "@/lib/country-essentials";
 import {
   ArrowLeft, MapPin, Phone, ShieldAlert, Backpack, Coins, Languages,
   CloudSun, AlertTriangle, ShieldCheck, Heart, Building2, Pill, Landmark,
-  ExternalLink, Sparkles, Compass,
+  ExternalLink, Sparkles, Compass, Trophy,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -122,7 +124,7 @@ const Trip = () => {
           </div>
         </header>
 
-        {/* Quick row */}
+        {/* Quick row — always visible */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <QuickCard icon={ShieldCheck} tone="bg-secondary-soft text-secondary" label="Advisory" value={brief.advisory_status || "—"} />
           <QuickCard icon={Phone} tone="bg-danger/10 text-danger" label="Emergency" value={emergency.general || "—"} sub={`Police ${emergency.police} · Ambulance ${emergency.ambulance}`} />
@@ -132,146 +134,164 @@ const Trip = () => {
           <QuickCard icon={MapPin} tone="bg-primary-soft text-primary" label="Country" value={trip.country || "—"} sub="ISO code" />
         </div>
 
-        {/* Safety Pulse — live, sensor-aware companion */}
-        <div className="mt-6">
-          <SafetyPulse
-            destination={trip.destination}
-            country={trip.country}
-            baseScore={score}
-            weather={trip.weather}
-            emergency={emergency}
-            lat={trip.lat}
-            lon={trip.lon}
-            onPanic={() => setSosSignal((n) => n + 1)}
-          />
-        </div>
+        {/* Tabs — separate sections so it's not congested */}
+        <Tabs defaultValue="vibe" className="mt-8">
+          <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-card p-1.5 shadow-soft">
+            <TabTrig value="vibe" icon={Sparkles}>Vibe</TabTrig>
+            <TabTrig value="safety" icon={ShieldAlert}>Safety</TabTrig>
+            <TabTrig value="explore" icon={MapPin}>Explore</TabTrig>
+            <TabTrig value="essentials" icon={Compass}>Essentials</TabTrig>
+            <TabTrig value="play" icon={Trophy}>Play</TabTrig>
+            <TabTrig value="ask" icon={Sparkles}>Ask AI</TabTrig>
+          </TabsList>
 
-        {/* Main grid */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          {/* Risks */}
-          <Section icon={ShieldAlert} title="Risk snapshot" subtitle="What to watch for" className="lg:col-span-2">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {(brief.risk_snapshot || []).map((r: any, i: number) => (
-                <div key={i} className="rounded-xl border bg-background p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="font-semibold">{r.category}</p>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${levelBadge(r.level)}`}>{r.level}</span>
-                  </div>
-                  <p className="mt-1 text-sm text-muted-foreground">{r.note}</p>
-                </div>
-              ))}
+          {/* VIBE — the fun, exciting first impression */}
+          <TabsContent value="vibe" className="mt-6 space-y-6">
+            <TripVibe destination={trip.destination} country={trip.country} />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Section icon={Backpack} title="Packing checklist" subtitle="Tailored to weather & trip length">
+                <BulletList items={brief.packing_checklist} checkable />
+              </Section>
+              <Section icon={Heart} title="Cultural etiquette" subtitle="Do's & don'ts">
+                <BulletList items={brief.cultural_etiquette} />
+              </Section>
             </div>
-          </Section>
+          </TabsContent>
 
-          {/* Emergency */}
-          <Section icon={Phone} title="Emergency support" subtitle="Save these now">
-            <div className="grid gap-2">
-              <EmergencyRow label="General" value={emergency.general} />
-              <EmergencyRow label="Police" value={emergency.police} />
-              <EmergencyRow label="Ambulance" value={emergency.ambulance} />
-              <EmergencyRow label="Fire" value={emergency.fire} />
-            </div>
-            <div className="mt-4">
-              <SafetyCard
-                destination={trip.destination}
-                country={trip.country}
-                emergency={emergency}
-                brief={brief}
-              />
-            </div>
-          </Section>
-
-          {/* Map */}
-          <Section icon={MapPin} title="Nearby help" subtitle="Hospitals · police · pharmacies · embassies" className="lg:col-span-2">
-            {mapUrl && (
-              <div className="overflow-hidden rounded-xl border">
-                <iframe title="Map" src={mapUrl} className="h-72 w-full border-0" loading="lazy" />
-              </div>
-            )}
-            <div className="mt-4">
-              {poisLoading ? (
-                <p className="text-sm text-muted-foreground">Finding nearby help points...</p>
-              ) : pois.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No nearby help points found within 3 km.</p>
-              ) : (
-                <ul className="grid gap-2 sm:grid-cols-2">
-                  {pois.slice(0, 12).map((p) => (
-                    <li key={p.id} className="flex items-center gap-3 rounded-lg border bg-background p-2.5">
-                      <PoiIcon type={p.type} />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold">{p.name}</p>
-                        <p className="text-xs capitalize text-muted-foreground">{p.type}</p>
-                      </div>
-                      <a href={`https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=18/${p.lat}/${p.lon}`} target="_blank" rel="noreferrer"
-                        className="text-muted-foreground hover:text-primary"><ExternalLink className="h-4 w-4" /></a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </Section>
-
-          {/* Chat */}
-          <Section icon={Sparkles} title="Trip assistant" subtitle="Ask SafeWander a follow-up">
-            <TripChat trip={trip} />
-          </Section>
-
-          {/* Arrival tips */}
-          <Section icon={MapPin} title="Travel moves" subtitle="Arrival & local movement tips">
-            <BulletList items={brief.arrival_tips} />
-          </Section>
-
-          {/* Packing */}
-          <Section icon={Backpack} title="Packing checklist" subtitle="Tailored to weather & trip length">
-            <BulletList items={brief.packing_checklist} checkable />
-          </Section>
-
-          {/* Local notes */}
-          <Section icon={AlertTriangle} title="Local safety notes" subtitle="Warnings worth knowing">
-            <BulletList items={brief.local_safety_notes} />
-          </Section>
-
-          {/* Money */}
-          <Section icon={Coins} title="Money snapshot" subtitle="Budget & local currency tips">
-            <BulletList items={brief.money_tips} />
-          </Section>
-
-          {/* Etiquette */}
-          <Section icon={Heart} title="Cultural etiquette" subtitle="Do's & don'ts">
-            <BulletList items={brief.cultural_etiquette} />
-          </Section>
-
-          {/* Travel Essentials — plug, water, drive side, sun, time */}
-          <Section icon={Compass} title="Travel essentials" subtitle="Plug · water · drive side · local time" className="lg:col-span-3">
-            <TravelEssentials country={trip.country} lat={trip.lat} lon={trip.lon} />
-          </Section>
-
-          {/* Currency converter */}
-          <Section icon={Coins} title="Currency converter" subtitle="Live ECB rates · no app switching">
-            <CurrencyConverter
-              destinationCurrency={essentials?.currency || "EUR"}
-              symbol={essentials?.currencySymbol || "€"}
+          {/* SAFETY — pulse, risks, emergency */}
+          <TabsContent value="safety" className="mt-6 space-y-6">
+            <SafetyPulse
+              destination={trip.destination}
+              country={trip.country}
+              baseScore={score}
+              weather={trip.weather}
+              emergency={emergency}
+              lat={trip.lat}
+              lon={trip.lon}
+              onPanic={() => setSosSignal((n) => n + 1)}
             />
-          </Section>
-
-          {/* Phrasebook — 12 essentials with text-to-speech */}
-          <Section icon={Languages} title="Phrasebook" subtitle="Tap to hear it spoken" className="lg:col-span-2">
-            <Phrasebook language={essentials?.language} languageLabel={essentials?.languageLabel} />
-          </Section>
-
-          {/* Phrases */}
-          <Section icon={Languages} title="Emergency phrases" subtitle="Help in the local language" className="lg:col-span-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {(brief.emergency_phrases || []).map((p: any, i: number) => (
-                <div key={i} className="rounded-xl border bg-background p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{p.phrase}</p>
-                  <p className="mt-1 font-display text-lg font-semibold">{p.local}</p>
-                  {p.pronunciation && <p className="text-xs italic text-muted-foreground">/{p.pronunciation}/</p>}
+            <div className="grid gap-6 lg:grid-cols-3">
+              <Section icon={ShieldAlert} title="Risk snapshot" subtitle="What to watch for" className="lg:col-span-2">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {(brief.risk_snapshot || []).map((r: any, i: number) => (
+                    <div key={i} className="rounded-xl border bg-background p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-semibold">{r.category}</p>
+                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${levelBadge(r.level)}`}>{r.level}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">{r.note}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </Section>
+              <Section icon={Phone} title="Emergency support" subtitle="Save these now">
+                <div className="grid gap-2">
+                  <EmergencyRow label="General" value={emergency.general} />
+                  <EmergencyRow label="Police" value={emergency.police} />
+                  <EmergencyRow label="Ambulance" value={emergency.ambulance} />
+                  <EmergencyRow label="Fire" value={emergency.fire} />
+                </div>
+                <div className="mt-4">
+                  <SafetyCard
+                    destination={trip.destination}
+                    country={trip.country}
+                    emergency={emergency}
+                    brief={brief}
+                  />
+                </div>
+              </Section>
             </div>
-          </Section>
-        </div>
+            <Section icon={AlertTriangle} title="Local safety notes" subtitle="Warnings worth knowing">
+              <BulletList items={brief.local_safety_notes} />
+            </Section>
+          </TabsContent>
+
+          {/* EXPLORE — map, POIs, arrival */}
+          <TabsContent value="explore" className="mt-6 space-y-6">
+            <Section icon={MapPin} title="Nearby help" subtitle="Hospitals · police · pharmacies · embassies">
+              {mapUrl && (
+                <div className="overflow-hidden rounded-xl border">
+                  <iframe title="Map" src={mapUrl} className="h-72 w-full border-0" loading="lazy" />
+                </div>
+              )}
+              <div className="mt-4">
+                {poisLoading ? (
+                  <p className="text-sm text-muted-foreground">Finding nearby help points...</p>
+                ) : pois.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No nearby help points found within 3 km.</p>
+                ) : (
+                  <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {pois.slice(0, 12).map((p) => (
+                      <li key={p.id} className="flex items-center gap-3 rounded-lg border bg-background p-2.5">
+                        <PoiIcon type={p.type} />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold">{p.name}</p>
+                          <p className="text-xs capitalize text-muted-foreground">{p.type}</p>
+                        </div>
+                        <a href={`https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=18/${p.lat}/${p.lon}`} target="_blank" rel="noreferrer"
+                          className="text-muted-foreground hover:text-primary"><ExternalLink className="h-4 w-4" /></a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </Section>
+            <Section icon={MapPin} title="Travel moves" subtitle="Arrival & local movement tips">
+              <BulletList items={brief.arrival_tips} />
+            </Section>
+          </TabsContent>
+
+          {/* ESSENTIALS — money, language, plug, water */}
+          <TabsContent value="essentials" className="mt-6 space-y-6">
+            <Section icon={Compass} title="Travel essentials" subtitle="Plug · water · drive side · local time">
+              <TravelEssentials country={trip.country} lat={trip.lat} lon={trip.lon} />
+            </Section>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Section icon={Coins} title="Currency converter" subtitle="Live ECB rates · no app switching">
+                <CurrencyConverter
+                  destinationCurrency={essentials?.currency || "EUR"}
+                  symbol={essentials?.currencySymbol || "€"}
+                />
+              </Section>
+              <Section icon={Coins} title="Money snapshot" subtitle="Budget & local currency tips">
+                <BulletList items={brief.money_tips} />
+              </Section>
+            </div>
+            <Section icon={Languages} title="Phrasebook" subtitle="Tap to hear it spoken">
+              <Phrasebook language={essentials?.language} languageLabel={essentials?.languageLabel} />
+            </Section>
+            <Section icon={Languages} title="Emergency phrases" subtitle="Help in the local language">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {(brief.emergency_phrases || []).map((p: any, i: number) => (
+                  <div key={i} className="rounded-xl border bg-background p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{p.phrase}</p>
+                    <p className="mt-1 font-display text-lg font-semibold">{p.local}</p>
+                    {p.pronunciation && <p className="text-xs italic text-muted-foreground">/{p.pronunciation}/</p>}
+                  </div>
+                ))}
+              </div>
+            </Section>
+          </TabsContent>
+
+          {/* PLAY — Wander Bingo */}
+          <TabsContent value="play" className="mt-6 space-y-6">
+            <WanderBingo tripId={trip.id} />
+            <div className="rounded-2xl border-2 border-dashed border-primary/30 bg-primary-soft/30 p-6 text-center">
+              <p className="font-display text-lg font-semibold">Why play? 🎲</p>
+              <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+                The best trips aren't checklists — they're collisions with strangeness.
+                Wander Bingo nudges you off the tourist track, one square at a time.
+              </p>
+            </div>
+          </TabsContent>
+
+          {/* ASK AI */}
+          <TabsContent value="ask" className="mt-6">
+            <Section icon={Sparkles} title="Trip assistant" subtitle="Ask SafeWander a follow-up">
+              <TripChat trip={trip} />
+            </Section>
+          </TabsContent>
+        </Tabs>
       </main>
 
       <WhisperSOS
@@ -287,6 +307,15 @@ const Trip = () => {
     </div>
   );
 };
+
+const TabTrig = ({ value, icon: Icon, children }: any) => (
+  <TabsTrigger
+    value={value}
+    className="flex-1 min-w-[88px] gap-1.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-soft"
+  >
+    <Icon className="h-3.5 w-3.5" /> {children}
+  </TabsTrigger>
+);
 
 const QuickCard = ({ icon: Icon, tone, label, value, sub }: any) => (
   <div className="rounded-2xl border bg-card p-4 shadow-soft">
