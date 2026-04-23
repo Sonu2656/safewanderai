@@ -146,6 +146,7 @@ const Trip = () => {
         <Tabs defaultValue="vibe" className="mt-8">
           <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-card p-1.5 shadow-soft">
             <TabTrig value="vibe" icon={Sparkles}>Vibe</TabTrig>
+            <TabTrig value="tape" icon={Camera}>Tape</TabTrig>
             <TabTrig value="safety" icon={ShieldAlert}>Safety</TabTrig>
             <TabTrig value="explore" icon={MapPin}>Explore</TabTrig>
             <TabTrig value="essentials" icon={Compass}>Essentials</TabTrig>
