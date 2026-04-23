@@ -167,6 +167,24 @@ const Trip = () => {
             </div>
           </TabsContent>
 
+          {/* TAPE — shareable poster */}
+          <TabsContent value="tape" className="mt-6">
+            <Section icon={Camera} title="Trip Tape" subtitle="Your trip, as a story-ready mini-poster — save & share">
+              <TripTape
+                destination={trip.destination}
+                country={trip.country}
+                score={score}
+                scoreLabel={brief.score_label || tone.label}
+                weather={trip.weather}
+                vibeWord={brief.vibe_word || "Main character energy"}
+                emergency={emergency}
+                packingTop={brief.packing_checklist?.slice(0, 1)}
+                phraseLocal={brief.emergency_phrases?.[0]?.local}
+                phraseEn={brief.emergency_phrases?.[0]?.phrase}
+              />
+            </Section>
+          </TabsContent>
+
           {/* SAFETY — pulse, risks, emergency */}
           <TabsContent value="safety" className="mt-6 space-y-6">
             <SafetyPulse
