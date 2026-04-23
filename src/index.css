@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -52,6 +52,16 @@
     --gradient-coral: linear-gradient(135deg, hsl(8 88% 65%), hsl(18 92% 60%));
     --gradient-teal: linear-gradient(135deg, hsl(172 60% 50%), hsl(192 70% 50%));
     --gradient-sun: linear-gradient(135deg, hsl(42 96% 65%), hsl(28 95% 60%));
+    --gradient-y2k: linear-gradient(135deg, hsl(320 90% 70%) 0%, hsl(8 95% 65%) 50%, hsl(42 100% 65%) 100%);
+    --gradient-aurora: linear-gradient(135deg, hsl(280 80% 70%) 0%, hsl(200 90% 65%) 50%, hsl(172 70% 55%) 100%);
+    --gradient-tape: linear-gradient(160deg, hsl(8 90% 65%) 0%, hsl(320 80% 60%) 50%, hsl(260 75% 55%) 100%);
+
+    /* Genz mesh background */
+    --mesh-bg:
+      radial-gradient(at 12% 18%, hsl(42 100% 80% / 0.55) 0px, transparent 45%),
+      radial-gradient(at 88% 12%, hsl(8 100% 78% / 0.5) 0px, transparent 50%),
+      radial-gradient(at 78% 88%, hsl(172 70% 75% / 0.5) 0px, transparent 50%),
+      radial-gradient(at 18% 82%, hsl(280 80% 80% / 0.4) 0px, transparent 50%);
 
     --shadow-soft: 0 4px 20px -8px hsl(8 60% 50% / 0.15);
     --shadow-card: 0 8px 28px -12px hsl(222 30% 25% / 0.12);
@@ -107,10 +117,38 @@
   .bg-gradient-coral { background-image: var(--gradient-coral); }
   .bg-gradient-teal { background-image: var(--gradient-teal); }
   .bg-gradient-sun { background-image: var(--gradient-sun); }
+  .bg-gradient-y2k { background-image: var(--gradient-y2k); }
+  .bg-gradient-aurora { background-image: var(--gradient-aurora); }
+  .bg-gradient-tape { background-image: var(--gradient-tape); }
+  .bg-mesh { background-image: var(--mesh-bg); }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .text-balance { text-wrap: balance; }
+  .font-handwritten { font-family: 'Caveat', cursive; }
+
+  /* Sticker = chunky outline + drop shadow, works for chips/badges */
+  .sticker {
+    border: 2px solid hsl(var(--foreground));
+    box-shadow: 3px 3px 0 0 hsl(var(--foreground));
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sticker:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 0 hsl(var(--foreground));
+  }
+  .sticker:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 0 hsl(var(--foreground));
+  }
+
+  /* Marquee for ticker-style text */
+  .marquee-track {
+    animation: marquee 30s linear infinite;
+  }
+
+  /* Wiggle for playful icons */
+  .hover-wiggle:hover { animation: wiggle 0.5s ease-in-out; }
 
   /* Ensure gradient text renders on Safari/Chromium when combined with bg-clip-text */
   .bg-clip-text {
@@ -130,3 +168,30 @@
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-up { animation: fade-up 0.6s ease-out both; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.02); }
+}
+.animate-bounce-soft { animation: bounce-soft 2.4s ease-in-out infinite; }
