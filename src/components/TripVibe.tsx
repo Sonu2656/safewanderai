@@ -215,17 +215,18 @@ export const TripVibe = ({ destination, country }: { destination: string; countr
 
   return (
     <div className={`relative overflow-hidden rounded-3xl border-2 border-foreground/10 bg-gradient-to-br ${vibe.gradient} p-6 shadow-glow transition-all duration-500`}>
-      {/* Floating emoji parade */}
+      {/* Floating emoji parade — limited for perf */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {vibe.emojiTrail.map((e, i) => (
+        {vibe.emojiTrail.slice(0, 4).map((e, i) => (
           <span
             key={`${vibe.key}-${i}`}
             className="absolute text-2xl opacity-40 animate-float select-none"
             style={{
-              left: `${(i * 17 + 8) % 90}%`,
-              top: `${(i * 23 + 12) % 80}%`,
-              animationDelay: `${i * 0.6}s`,
-              animationDuration: `${5 + (i % 3)}s`,
+              left: `${(i * 23 + 10) % 88}%`,
+              top: `${(i * 29 + 14) % 78}%`,
+              animationDelay: `${i * 0.7}s`,
+              animationDuration: `${6 + (i % 2)}s`,
+              willChange: "transform",
             }}
           >{e}</span>
         ))}
