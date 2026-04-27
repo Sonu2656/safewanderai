@@ -258,7 +258,16 @@ export const GoatScore = () => {
         {/* Hero row: 3D trophy + XP */}
         <div className="mt-6 grid gap-6 md:grid-cols-[260px_1fr] md:items-center">
           <div className="relative aspect-square w-full max-w-[260px] mx-auto rounded-2xl bg-gradient-to-br from-foreground/5 to-foreground/0 sticker">
-            <TrophyCanvas levelKey={current.key} />
+            <LazyMount
+              className="absolute inset-0"
+              fallback={
+                <div className="grid h-full w-full place-items-center text-6xl">
+                  {current.emoji}
+                </div>
+              }
+            >
+              <TrophyCanvas levelKey={current.key} />
+            </LazyMount>
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-3 py-1 text-xs font-black text-background">
               {current.emoji} {current.name.toUpperCase()}
             </div>
