@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Logo } from "@/components/Logo";
 import { GlobeTicker } from "@/components/GlobeTicker";
+import { Globe3D } from "@/components/Globe3D";
 import { burstFromEvent } from "@/lib/fun";
-import heroImg from "@/assets/hero-globe.jpg";
 import {
   ShieldCheck, MapPin, Phone, CloudSun, MessageCircle, Sparkles, Globe2, Users, ArrowRight,
   PartyPopper, Heart, Coffee, Zap, Coins, Languages, Compass,
