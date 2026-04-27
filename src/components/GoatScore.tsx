@@ -451,10 +451,14 @@ export const GoatScore = () => {
   );
 };
 
-const Stat = ({ icon: Icon, label, value }: any) => (
-  <div className="rounded-xl bg-card p-3 sticker">
-    <Icon className="h-4 w-4 text-primary" />
-    <p className="mt-1 font-display text-2xl font-black tabular-nums leading-none">{value}</p>
-    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
-  </div>
+const Stat = forwardRef<HTMLDivElement, { icon: any; label: string; value: number }>(
+  ({ icon: Icon, label, value }, ref) => (
+    <div ref={ref} className="rounded-xl bg-card p-3 sticker">
+      <Icon className="h-4 w-4 text-primary" />
+      <p className="mt-1 font-display text-2xl font-black tabular-nums leading-none">{value}</p>
+      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
+    </div>
+  ),
 );
+Stat.displayName = "Stat";
+
