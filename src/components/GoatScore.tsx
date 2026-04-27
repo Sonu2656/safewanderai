@@ -323,19 +323,27 @@ export const GoatScore = () => {
 
         {/* Hero row: 3D trophy + XP */}
         <div className="mt-6 grid gap-6 md:grid-cols-[260px_1fr] md:items-center">
-          <div className="relative aspect-square w-full max-w-[260px] mx-auto rounded-2xl bg-gradient-to-br from-foreground/5 to-foreground/0 sticker">
+          <div className="group relative aspect-square w-full max-w-[260px] mx-auto rounded-2xl bg-gradient-to-br from-foreground/5 to-foreground/0 sticker cursor-pointer">
             <LazyMount
               className="absolute inset-0"
               fallback={
-                <div className="grid h-full w-full place-items-center text-6xl">
+                <div className="grid h-full w-full place-items-center text-6xl animate-float">
                   {current.emoji}
                 </div>
               }
             >
-              <TrophyCanvas levelKey={current.key} />
+              <TrophyCanvas
+                levelKey={current.key}
+                onTap={(e) => {
+                  burstFromEvent(e);
+                }}
+              />
             </LazyMount>
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-3 py-1 text-xs font-black text-background">
+            <div className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-3 py-1 text-xs font-black text-background">
               {current.emoji} {current.name.toUpperCase()}
+            </div>
+            <div className="pointer-events-none absolute top-2 right-2 rounded-full bg-background/90 backdrop-blur px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-foreground border border-foreground/10 opacity-0 group-hover:opacity-100 transition-opacity">
+              tap to spin ✨
             </div>
           </div>
 
