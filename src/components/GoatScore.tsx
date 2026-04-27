@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Text3D, Center, Sparkles as DreiSparkles } from "@react-three/drei";
+import { Float, Sparkles as DreiSparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { Trophy, Flame, Lock, Share2, Sparkles, Crown, Plane, Globe2, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
