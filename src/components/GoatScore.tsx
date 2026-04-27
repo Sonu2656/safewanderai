@@ -99,39 +99,44 @@ const SpinningTrophy = ({ levelKey }: { levelKey: string }) => {
     <group ref={ref}>
       {/* Cup */}
       <mesh position={[0, 0.35, 0]}>
-        <cylinderGeometry args={[0.55, 0.4, 0.7, 32]} />
+        <cylinderGeometry args={[0.55, 0.4, 0.7, 24]} />
         <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.85} roughness={0.18} emissive={colorMap[levelKey] || "#FBC04A"} emissiveIntensity={0.25} />
       </mesh>
       {/* Handles */}
       <mesh position={[0.7, 0.35, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.18, 0.05, 16, 32, Math.PI]} />
+        <torusGeometry args={[0.18, 0.05, 10, 20, Math.PI]} />
         <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.85} roughness={0.2} />
       </mesh>
       <mesh position={[-0.7, 0.35, 0]} rotation={[0, 0, -Math.PI / 2]}>
-        <torusGeometry args={[0.18, 0.05, 16, 32, Math.PI]} />
+        <torusGeometry args={[0.18, 0.05, 10, 20, Math.PI]} />
         <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.85} roughness={0.2} />
       </mesh>
       {/* Stem */}
       <mesh position={[0, -0.15, 0]}>
-        <cylinderGeometry args={[0.1, 0.15, 0.3, 16]} />
+        <cylinderGeometry args={[0.1, 0.15, 0.3, 12]} />
         <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.9} roughness={0.15} />
       </mesh>
       {/* Base */}
       <mesh position={[0, -0.4, 0]}>
-        <cylinderGeometry args={[0.45, 0.5, 0.18, 32]} />
+        <cylinderGeometry args={[0.45, 0.5, 0.18, 24]} />
         <meshStandardMaterial color="#1B1B2A" metalness={0.4} roughness={0.5} />
       </mesh>
-      <DreiSparkles count={30} scale={2.2} size={3} speed={0.6} color={colorMap[levelKey] || "#FBC04A"} />
+      <DreiSparkles count={14} scale={2.2} size={3} speed={0.5} color={colorMap[levelKey] || "#FBC04A"} />
     </group>
   );
 };
 
 const TrophyCanvas = ({ levelKey }: { levelKey: string }) => (
-  <Canvas camera={{ position: [0, 0.3, 3], fov: 45 }} dpr={[1, 2]} gl={{ alpha: true, antialias: true }}>
+  <Canvas
+    camera={{ position: [0, 0.3, 3], fov: 45 }}
+    dpr={[1, 1.5]}
+    gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+    frameloop={reduceMotion ? "demand" : "always"}
+  >
     <ambientLight intensity={0.5} />
     <directionalLight position={[3, 4, 5]} intensity={1.4} color="#FBC04A" />
     <pointLight position={[-3, -2, 2]} intensity={0.6} color="#F26A4F" />
-    <Float speed={1.6} rotationIntensity={0.4} floatIntensity={0.6}>
+    <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.5}>
       <SpinningTrophy levelKey={levelKey} />
     </Float>
   </Canvas>
