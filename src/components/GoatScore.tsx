@@ -8,6 +8,11 @@ import { popConfetti, burstFromEvent } from "@/lib/fun";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { LazyMount } from "@/components/LazyMount";
+
+const reduceMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
 // ──────────────────────────────────────────────────────────────
 // LEVELS — each tier has flavor + threshold
