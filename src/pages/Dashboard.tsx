@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { geocode, getWeather } from "@/lib/travel-data";
 import { popConfetti } from "@/lib/fun";
 import { Sparkles, Loader2, MapPin, Plus, Trash2, ArrowRight, Compass, PartyPopper } from "lucide-react";
+import { GoatScore } from "@/components/GoatScore";
 
 type Trip = {
   id: string;
@@ -131,6 +132,11 @@ const Dashboard = () => {
             <h1 className="mt-1 font-display text-4xl font-bold md:text-5xl">Where to next?</h1>
             <p className="mt-2 text-muted-foreground">Cook up a fresh brief, or revisit a past adventure.</p>
           </div>
+        </div>
+
+        {/* GOAT Score — gamified traveler rank */}
+        <div className="mb-10">
+          <GoatScore />
         </div>
 
         <div className="grid gap-8 lg:grid-cols-5">

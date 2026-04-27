@@ -201,7 +201,14 @@ export const TripVibe = ({ destination, country }: { destination: string; countr
   };
 
   const tapHype = (e: React.MouseEvent) => {
-    setHype((h) => Math.min(100, h + 3));
+    setHype((h) => {
+      const next = Math.min(100, h + 3);
+      try {
+        const prev = Number(localStorage.getItem("safewander-hype-max") || "0");
+        if (next > prev) localStorage.setItem("safewander-hype-max", String(next));
+      } catch {}
+      return next;
+    });
     setTapped((n) => n + 1);
     if ((tapped + 1) % 7 === 0) burstFromEvent(e);
   };

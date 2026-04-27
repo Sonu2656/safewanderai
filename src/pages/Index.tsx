@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Logo } from "@/components/Logo";
 import { GlobeTicker } from "@/components/GlobeTicker";
+import { Globe3D } from "@/components/Globe3D";
 import { burstFromEvent } from "@/lib/fun";
-import heroImg from "@/assets/hero-globe.jpg";
 import {
   ShieldCheck, MapPin, Phone, CloudSun, MessageCircle, Sparkles, Globe2, Users, ArrowRight,
   PartyPopper, Heart, Coffee, Zap, Coins, Languages, Compass,
@@ -70,16 +70,10 @@ const Index = () => {
 
           <div className="relative animate-fade-up" style={{ animationDelay: "120ms" }}>
             <div className="absolute -inset-8 rounded-[3rem] bg-gradient-sun opacity-30 blur-3xl" aria-hidden />
-            <div className="relative animate-float">
-              <img
-                src={heroImg}
-                alt="Stylised globe with paper airplane orbiting"
-                width={1280}
-                height={960}
-                className="mx-auto w-full max-w-md drop-shadow-2xl"
-              />
+            <div className="relative mx-auto w-full max-w-md">
+              <Globe3D />
             </div>
-            <div className="absolute -bottom-2 left-4 hidden rounded-2xl bg-card/95 p-4 shadow-card backdrop-blur md:block animate-fade-up" style={{ animationDelay: "300ms" }}>
+            <div className="absolute -bottom-2 left-0 hidden rounded-2xl bg-card/95 p-4 shadow-card backdrop-blur md:block animate-fade-up sticker" style={{ animationDelay: "300ms" }}>
               <div className="flex items-center gap-3">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-success/15 text-success">
                   <ShieldCheck className="h-5 w-5" />
@@ -90,7 +84,7 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute -top-2 right-4 hidden rounded-2xl bg-card/95 p-4 shadow-card backdrop-blur md:block animate-fade-up" style={{ animationDelay: "450ms" }}>
+            <div className="absolute -top-2 right-0 hidden rounded-2xl bg-card/95 p-4 shadow-card backdrop-blur md:block animate-fade-up sticker" style={{ animationDelay: "450ms" }}>
               <div className="flex items-center gap-3">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent-foreground">
                   <CloudSun className="h-5 w-5" />
