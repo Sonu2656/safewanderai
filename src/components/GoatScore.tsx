@@ -82,64 +82,130 @@ const ACHIEVEMENTS: Achievement[] = [
 ];
 
 // ──────────────────────────────────────────────────────────────
-// 3D Trophy
+// 3D Trophy — interactive: click to spin-burst, hover to tilt
 // ──────────────────────────────────────────────────────────────
-const SpinningTrophy = ({ levelKey }: { levelKey: string }) => {
+const SpinningTrophy = ({
+  levelKey,
+  spinBoost,
+  pointer,
+}: {
+  levelKey: string;
+  spinBoost: number;
+  pointer: { x: number; y: number };
+}) => {
   const ref = useRef<THREE.Group>(null);
   const colorMap: Record<string, string> = {
     kid: "#F59E0B", scout: "#0EA5E9", rover: "#10B981",
     nomad: "#F97316", pioneer: "#A855F7", goat: "#FBC04A",
   };
-  useFrame(({ clock }) => {
+  const color = colorMap[levelKey] || "#FBC04A";
+
+  useFrame(({ clock }, delta) => {
     if (!ref.current) return;
-    ref.current.rotation.y = clock.elapsedTime * 0.6;
+    // Base rotation + boost decays over time
+    const boost = spinBoost > 0 ? spinBoost : 0;
+    ref.current.rotation.y += delta * (0.6 + boost);
+    // Smooth tilt towards pointer
+    const targetX = pointer.y * 0.35;
+    const targetZ = -pointer.x * 0.25;
+    ref.current.rotation.x += (targetX - ref.current.rotation.x) * 0.08;
+    ref.current.rotation.z += (targetZ - ref.current.rotation.z) * 0.08;
+    // Floaty bob
     ref.current.position.y = Math.sin(clock.elapsedTime * 1.4) * 0.08;
   });
+
   return (
     <group ref={ref}>
       {/* Cup */}
       <mesh position={[0, 0.35, 0]}>
-        <cylinderGeometry args={[0.55, 0.4, 0.7, 24]} />
-        <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.85} roughness={0.18} emissive={colorMap[levelKey] || "#FBC04A"} emissiveIntensity={0.25} />
+        <cylinderGeometry args={[0.55, 0.4, 0.7, 28]} />
+        <meshStandardMaterial color={color} metalness={0.9} roughness={0.15} emissive={color} emissiveIntensity={0.35} />
       </mesh>
       {/* Handles */}
       <mesh position={[0.7, 0.35, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.18, 0.05, 10, 20, Math.PI]} />
-        <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.85} roughness={0.2} />
+        <torusGeometry args={[0.18, 0.05, 12, 24, Math.PI]} />
+        <meshStandardMaterial color={color} metalness={0.9} roughness={0.18} />
       </mesh>
       <mesh position={[-0.7, 0.35, 0]} rotation={[0, 0, -Math.PI / 2]}>
-        <torusGeometry args={[0.18, 0.05, 10, 20, Math.PI]} />
-        <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.85} roughness={0.2} />
+        <torusGeometry args={[0.18, 0.05, 12, 24, Math.PI]} />
+        <meshStandardMaterial color={color} metalness={0.9} roughness={0.18} />
       </mesh>
       {/* Stem */}
       <mesh position={[0, -0.15, 0]}>
-        <cylinderGeometry args={[0.1, 0.15, 0.3, 12]} />
-        <meshStandardMaterial color={colorMap[levelKey] || "#FBC04A"} metalness={0.9} roughness={0.15} />
+        <cylinderGeometry args={[0.1, 0.15, 0.3, 14]} />
+        <meshStandardMaterial color={color} metalness={0.95} roughness={0.12} />
       </mesh>
       {/* Base */}
       <mesh position={[0, -0.4, 0]}>
-        <cylinderGeometry args={[0.45, 0.5, 0.18, 24]} />
-        <meshStandardMaterial color="#1B1B2A" metalness={0.4} roughness={0.5} />
+        <cylinderGeometry args={[0.45, 0.5, 0.18, 28]} />
+        <meshStandardMaterial color="#1B1B2A" metalness={0.5} roughness={0.4} />
       </mesh>
-      <DreiSparkles count={14} scale={2.2} size={3} speed={0.5} color={colorMap[levelKey] || "#FBC04A"} />
+      {/* Tier label disc on base */}
+      <mesh position={[0, -0.31, 0]}>
+        <cylinderGeometry args={[0.32, 0.32, 0.02, 24]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.6} metalness={0.6} roughness={0.3} />
+      </mesh>
+      <DreiSparkles count={18} scale={2.4} size={3.5} speed={0.6} color={color} />
     </group>
   );
 };
 
-const TrophyCanvas = ({ levelKey }: { levelKey: string }) => (
-  <Canvas
-    camera={{ position: [0, 0.3, 3], fov: 45 }}
-    dpr={[1, 1.5]}
-    gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
-    frameloop={reduceMotion ? "demand" : "always"}
-  >
-    <ambientLight intensity={0.5} />
-    <directionalLight position={[3, 4, 5]} intensity={1.4} color="#FBC04A" />
-    <pointLight position={[-3, -2, 2]} intensity={0.6} color="#F26A4F" />
-    <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.5}>
-      <SpinningTrophy levelKey={levelKey} />
-    </Float>
-  </Canvas>
+const TrophyScene = ({ levelKey }: { levelKey: string }) => {
+  const [spinBoost, setSpinBoost] = useState(0);
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const { invalidate } = useThree();
+
+  // Decay spin boost smoothly
+  useFrame((_, delta) => {
+    if (spinBoost > 0.01) {
+      setSpinBoost((s) => Math.max(0, s - delta * 1.5));
+      invalidate();
+    }
+  });
+
+  return (
+    <group
+      onPointerMove={(e) => {
+        // e.uv may be undefined; fallback to point
+        const x = (e.point?.x || 0) / 2;
+        const y = (e.point?.y || 0) / 2;
+        setPointer({ x: Math.max(-1, Math.min(1, x)), y: Math.max(-1, Math.min(1, y)) });
+        invalidate();
+      }}
+      onPointerOut={() => setPointer({ x: 0, y: 0 })}
+      onClick={() => {
+        setSpinBoost(6);
+        invalidate();
+      }}
+    >
+      <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.4}>
+        <group>
+          <SpinningTrophy levelKey={levelKey} spinBoost={spinBoost} pointer={pointer} />
+        </group>
+      </Float>
+      {/* Invisible hit-plane so pointer events register everywhere in the canvas */}
+      <mesh position={[0, 0, 0]}>
+        <planeGeometry args={[6, 6]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+    </group>
+  );
+};
+
+const TrophyCanvas = ({ levelKey, onTap }: { levelKey: string; onTap?: (e: React.MouseEvent) => void }) => (
+  <div className="absolute inset-0" onClick={onTap}>
+    <Canvas
+      camera={{ position: [0, 0.3, 3], fov: 45 }}
+      dpr={[1, 1.5]}
+      gl={{ alpha: true, antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: false }}
+      frameloop={reduceMotion ? "demand" : "always"}
+    >
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[3, 4, 5]} intensity={1.4} color="#FBC04A" />
+      <pointLight position={[-3, -2, 2]} intensity={0.7} color="#F26A4F" />
+      <TrophyScene levelKey={levelKey} />
+    </Canvas>
+  </div>
 );
 
 // ──────────────────────────────────────────────────────────────
