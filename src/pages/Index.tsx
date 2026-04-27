@@ -1,14 +1,17 @@
+import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Logo } from "@/components/Logo";
 import { GlobeTicker } from "@/components/GlobeTicker";
-import { Globe3D } from "@/components/Globe3D";
+import { LazyMount } from "@/components/LazyMount";
 import { burstFromEvent } from "@/lib/fun";
 import {
-  ShieldCheck, MapPin, Phone, CloudSun, MessageCircle, Sparkles, Globe2, Users, ArrowRight,
+  ShieldCheck, MapPin, Phone, CloudSun, MessageCircle, Sparkles, Globe2, Users,
   PartyPopper, Heart, Coffee, Zap, Coins, Languages, Compass,
 } from "lucide-react";
+
+const Globe3D = lazy(() => import("@/components/Globe3D").then((m) => ({ default: m.Globe3D })));
 
 const features = [
   { icon: ShieldCheck, color: "bg-primary-soft text-primary", emoji: "🛡️", title: "AI Safety Score", desc: "Your destination, rated 0–100 with the why behind it. No mystery, no panic." },
@@ -71,7 +74,19 @@ const Index = () => {
           <div className="relative animate-fade-up" style={{ animationDelay: "120ms" }}>
             <div className="absolute -inset-8 rounded-[3rem] bg-gradient-sun opacity-30 blur-3xl" aria-hidden />
             <div className="relative mx-auto w-full max-w-md">
-              <Globe3D />
+              <LazyMount
+                fallback={
+                  <div className="aspect-square w-full rounded-full bg-gradient-coral/20 animate-pulse" />
+                }
+              >
+                <Suspense
+                  fallback={
+                    <div className="aspect-square w-full rounded-full bg-gradient-coral/20 animate-pulse" />
+                  }
+                >
+                  <Globe3D />
+                </Suspense>
+              </LazyMount>
             </div>
             <div className="absolute -bottom-2 left-0 hidden rounded-2xl bg-card/95 p-4 shadow-card backdrop-blur md:block animate-fade-up sticker" style={{ animationDelay: "300ms" }}>
               <div className="flex items-center gap-3">
